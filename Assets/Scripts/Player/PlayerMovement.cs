@@ -16,10 +16,10 @@ public class PlayerMovement : MonoBehaviour
     }
     void FixedUpdate()
     {
-        if(joystick.MoveThreshold > 0)
+        if (joystick.MoveThreshold > 0)
         {
             float horizontal, vertical = 0;
-            horizontal = (joystick.Horizontal < -0.2) ? -1: (joystick.Horizontal > 0.5f) ? 1 : joystick.Horizontal;
+            horizontal = (joystick.Horizontal < -0.2) ? -1 : (joystick.Horizontal > 0.5f) ? 1 : joystick.Horizontal;
             vertical = (joystick.Vertical < -0.2) ? -1 : (joystick.Vertical > 0.5f) ? 1 : joystick.Vertical;
 
             rb.AddRelativeForce(horizontal * accelerationSpeed * Time.deltaTime, 0, vertical * accelerationSpeed * Time.deltaTime);

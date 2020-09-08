@@ -14,8 +14,9 @@ public class Shooting : MonoBehaviour
     RaycastHit hit;
     AudioSource audioSource;
     public AudioClip fireSound;
-    public float fireRate = .1f;
-    private bool isShooting = false;
+    private float fireRate = .12f;
+    //fire rate
+    float previousTime = 0;
     private void Start()
     {
         audioSource = Camera.main.GetComponent<AudioSource>();
@@ -28,35 +29,23 @@ public class Shooting : MonoBehaviour
         {
             if (hit.transform.gameObject.CompareTag("Zombie"))
             {
-                if (!isShooting)
+                if (Time.realtimeSinceStartup - previousTime > fireRate)
                 {
-                    isShooting = true;
-                    StartCoroutine(Fire(hit.transform.gameObject));
+                    Fire(hit.transform.gameObject);
+                    previousTime = Time.realtimeSinceStartup;
                 }
             }
-            else
-            {
-                StopShooting();
-            }
         }
-        else StopShooting();
         if(flashm && spawnMuzzleFlashPos)
         {
             flashm.transform.position = spawnMuzzleFlashPos.transform.position;
         }
     }
-    void StopShooting()
-    {
-        isShooting = false;
-        StopAllCoroutines();
-    }
-    IEnumerator Fire(GameObject hitted)
-    {
-        if(isShooting)
-        {
-            if(!hitted.GetComponent<Zombie>().isDead)
+    private void Fire(GameObject hitted)
+    {   
+        if (!hitted.GetComponent<Zombie>().isDead)
             {
-                if(CrossHair.GetComponent<Animator>())
+                if (CrossHair.GetComponent<Animator>())
                 {
                     CrossHair.GetComponent<Animator>().Play("CrossHairAnimation");
                 }
@@ -65,9 +54,6 @@ public class Shooting : MonoBehaviour
                 Instantiate(blood, hit.point, Quaternion.identity);
                 weapon.GetComponent<Animation>().Play("Ak47FireAnimation");
                 if (audioSource) audioSource.PlayOneShot(fireSound);
-                yield return new WaitForSeconds(fireRate);
-                StartCoroutine(Fire(hitted));
             }
-        } 
     }
 }
