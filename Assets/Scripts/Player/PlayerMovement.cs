@@ -3,18 +3,27 @@ using UnityEngine;
 
 public class PlayerMovement : MonoBehaviour
 {
-    public DynamicJoystick joystick;
-    public float maxSpeed;
-    Rigidbody rb;
+    #region variables
+
+    [SerializeField] private DynamicJoystick joystick;
+    
     public float accelerationSpeed = 50000.0f;
     public float deaccelerationSpeed = 5f;
-    Vector2 horizontalMovement;
+
+    private float maxSpeed;
+    private Rigidbody rb;
+    private Vector2 horizontalMovement;
+
+    #endregion
+
+    #region Unity methods
+
     private void Start()
     {
         maxSpeed = 10;
         rb = GetComponent<Rigidbody>();
     }
-    void FixedUpdate()
+    private void FixedUpdate()
     {
         if (joystick.MoveThreshold > 0)
         {
@@ -36,4 +45,5 @@ public class PlayerMovement : MonoBehaviour
             );
         }
     }
+    #endregion
 }
