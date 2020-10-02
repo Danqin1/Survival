@@ -8,7 +8,7 @@ public class SurviveTimer : MonoBehaviour
 
     public UnityEvent onTimerEnd;
 
-    [SerializeField] private SurviveSomeTimeSettings surviveSomeTimeSettings;
+    [SerializeField] private SurviveSettings surviveSomeTimeSettings;
 
     private float timeToSurvive;
 
@@ -24,7 +24,7 @@ public class SurviveTimer : MonoBehaviour
 
     #endregion
 
-    #region private 
+    #region private methods
 
     private IEnumerator Count()
     {

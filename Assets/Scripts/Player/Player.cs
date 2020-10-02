@@ -1,8 +1,11 @@
 ﻿using UnityEngine;
+using UnityEngine.Events;
 
 public class Player : MonoBehaviour
 {
     #region variables
+
+    public UnityEvent TakingDamage;
 
     public delegate void MyDelegate();
     public static event MyDelegate OnTakeAgro;
@@ -17,7 +20,7 @@ public class Player : MonoBehaviour
 
     #region Unity methods
 
-    private void Start()
+    private void Awake()
     {
         instance = this;
     }
@@ -34,14 +37,11 @@ public class Player : MonoBehaviour
 
     #region public methods
 
-    public Vector3 GetPosition()
-    {
-        return transform.position;
-    }
-
     public void TakeDamage(float dmg)
     {
         Health -= dmg;
+        if (Health <= 0) Debug.Log("U died");
+        TakingDamage.Invoke();
     }
 
     #endregion

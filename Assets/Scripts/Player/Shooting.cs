@@ -56,7 +56,7 @@ public class Shooting : MonoBehaviour
 
     private void Fire(GameObject hitted)
     {
-        if (!hitted.GetComponent<Zombie>().isDead)
+        if (!hitted.GetComponent<Zombie>().IsDead)
         {
             if (CrossHair.GetComponent<Animator>())
             {

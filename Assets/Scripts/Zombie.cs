@@ -3,70 +3,141 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 
-[RequireComponent(typeof(NavMeshAgent))]
+[RequireComponent(typeof(NavMeshAgent), typeof(Animator), typeof(Rigidbody))]
 public class Zombie : MonoBehaviour
 {
-    private const float AGRO_RADIUS = 20f;
+    #region variables
+
+    public SurviveSettings surviveSettings;
+
+    [SerializeField] private LayerMask playerLayer;
+
     private NavMeshAgent agent;
-    private MeshCollider meshCollider;
-    Vector3 finalPos = Vector3.zero;
-    public LayerMask playerLayer;
-    [SerializeField] private bool hasAgro;
-    bool changeDirectionCR;
-    public bool isDead = false;
+    private Animator animator;
+    private Rigidbody rb;
+    private Vector3 targetPosition = Vector3.zero;
+    
+    private bool changeDirectionCR;
     private bool wasHitted = false;
+    private bool hasAgro;
 
     private float Health = 100;
+    private float agroRadius;
+    private int damage;
+    private float atackDelay;
+    private float previousTime = 0;
 
-    Animator animator;
-    Rigidbody rb;
-    void Start()
+    #endregion
+
+    #region properties
+
+    public bool IsDead { get; set; }  = false;
+
+    #endregion
+
+    #region Unity methods
+
+    private void Start()
     {
+        damage = surviveSettings.ZombieDamage;
+        agroRadius = surviveSettings.ZombieAgroRadius;
+        atackDelay = surviveSettings.ZombieDamageRate;
+
+        animator = GetComponent<Animator>();
         agent = GetComponent<NavMeshAgent>();
         agent.stoppingDistance = 1.5f;
         hasAgro = false;
         changeDirectionCR = false;
-        animator = GetComponent<Animator>();
-        meshCollider = GetComponent<MeshCollider>();
     }
 
-    // Update is called once per frame
-    void Update()
+    private void Update()
     {
         CheckFieldOfView();
-        if(!hasAgro && finalPos != Vector3.zero)
+
+        if(!hasAgro && targetPosition != Vector3.zero && agent != null)
         {
-            agent.SetDestination(finalPos);
+            agent.SetDestination(targetPosition);
         }
+
         if(!hasAgro & !changeDirectionCR)
         {
-            StartCoroutine(changeDirection(AGRO_RADIUS));
+            StartCoroutine(changeDirection(agroRadius));
         }
-        if(animator && agent)
-        {
-            if(!hasAgro) animator.SetBool("isWalking", (agent.velocity.magnitude > .5f ? true : false));
-                else animator.SetBool("isWalking", false);
-            if (hasAgro) animator.SetBool("isRunning", (agent.velocity.magnitude > 1f ? true : false));
-                else animator.SetBool("isRunning", false);
-            if(agent.remainingDistance < 1.5f && hasAgro) animator.SetBool("isAttacking", true);
-                else animator.SetBool("isAttacking", false);
-        }   
+
+        SetAnimation(); 
     }
-    void CheckFieldOfView()
+
+    private void OnCollisionStay(Collision collision)
     {
-        if (Vector3.Distance(transform.position, Player.instance.GetPosition()) < AGRO_RADIUS)
+        if (collision.gameObject.GetComponent<Player>() != null)
         {
-            
-            Vector3 directionToPlayer = Player.instance.GetPosition() - GetPosition();
+            if (Time.realtimeSinceStartup - previousTime > atackDelay)
+            {
+                DoDamage(collision.gameObject.GetComponent<Player>());
+                previousTime = Time.realtimeSinceStartup;
+            }
+        }
+        
+    }
+
+    #endregion
+
+    #region public methods
+
+    public void TakeDamage(float dmg)
+    {
+        Health -= dmg;
+        if (Health <= 0)
+        {
+            IsDead = true;
+            animator.SetBool("isDead", true);
+        }
+        hasAgro = true;
+        wasHitted = true;
+        if (agent)
+        {
+            agent.SetDestination(Player.instance.transform.position);
+        }
+    }
+
+    #endregion
+
+
+    #region private methods
+
+    private void DoDamage(Player player)
+    {
+        player.TakeDamage(damage);
+    }
+
+    private void SetAnimation()
+    {
+        if (animator && agent)
+        {
+
+            if (!hasAgro) animator.SetBool("isWalking", (agent.velocity.magnitude > .5f ? true : false));
+            else animator.SetBool("isWalking", false);
+            if (hasAgro) animator.SetBool("isRunning", (agent.velocity.magnitude > 1f ? true : false));
+            else animator.SetBool("isRunning", false);
+            if (agent.remainingDistance < 1.5f && hasAgro) animator.SetBool("isAttacking", true);
+            else animator.SetBool("isAttacking", false);
+        }
+    }
+
+    private void CheckFieldOfView()
+    {
+        if (Vector3.Distance(transform.position, Player.instance.transform.position) < agroRadius)
+        {
+            Vector3 directionToPlayer = Player.instance.transform.position - transform.position;
+
             if (Vector3.Angle(transform.forward , directionToPlayer) < 70)
             {
-                
                 RaycastHit hit;
-                if (Physics.Raycast(GetPosition(), directionToPlayer, out hit, AGRO_RADIUS,playerLayer))
+                if (Physics.Raycast(transform.position, directionToPlayer, out hit, agroRadius, playerLayer))
                 {
-                    if (hit.transform.gameObject.CompareTag("Player") )
+                    if (hit.transform.gameObject.GetComponent<Player>() != null )
                     {
-                        Attack();
+                        GetAgro();
                     }
                     else DontAttack();
                 }
@@ -75,7 +146,8 @@ public class Zombie : MonoBehaviour
         }
         else  DontAttack();
     }
-    void Attack()
+
+    private void GetAgro()
     {
         if (!hasAgro)
         {
@@ -84,7 +156,7 @@ public class Zombie : MonoBehaviour
             agent.speed = 2;
         }   
     }
-    void DontAttack()
+    private void DontAttack()
     {
         if (hasAgro && !wasHitted)
         {
@@ -94,47 +166,35 @@ public class Zombie : MonoBehaviour
             agent.speed = 1;
         }    
     }
-    Vector3 GetPosition()
-    {
-        return transform.position;
-    }
-    public void Agro()
+
+    private void Agro()
     {
         if (Player.instance && agent)
         {
-            agent.SetDestination(Player.instance.GetPosition());
+            agent.SetDestination(Player.instance.transform.position);
         }
     }
-    public void TakeDamage(float dmg)
-    {
-        if (Health <= 0)
-        {
-            isDead = true;
-            animator.SetBool("isDead", true);
-        }
-        hasAgro = true;
-        wasHitted = true;
-        if(agent)
-        {
-            agent.SetDestination(Player.instance.GetPosition());
-        }
-        Health -= dmg;
-    }
+
     private void Die()
     {
         Destroy(gameObject);
     }
-    IEnumerator changeDirection(float radius)
+
+    private IEnumerator changeDirection(float radius)
     {
         changeDirectionCR = true;
         Vector3 newDestination = Random.insideUnitSphere * radius;
         newDestination += transform.position;
         NavMeshHit hit;
+
         if(NavMesh.SamplePosition(newDestination, out hit, radius, 1))
         {
-            finalPos = hit.position;
+            targetPosition = hit.position;
         }
+
         yield return new WaitForSeconds(5);
         changeDirectionCR = false;
     }
+
+    #endregion
 }
