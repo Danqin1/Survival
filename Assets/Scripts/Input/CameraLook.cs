@@ -7,15 +7,14 @@ public class CameraLook : MonoBehaviour
     #region variables
 
     [SerializeField] private FixedTouchField fixedTouch;
-    private float mouseSensitivity;
 
+    private float mouseSensitivity;
     private float currentYrot;
     private float currentXrot;
     private float wantedYrot;
     private float wantedXrot;
     private float yRotSpeed;
     private float xRotSpeed;
-
     private float rotationYVelocity, cameraXVelocity;
 
     #endregion

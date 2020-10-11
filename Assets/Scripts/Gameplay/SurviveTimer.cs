@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.SceneManagement;
 
 public class SurviveTimer : MonoBehaviour
 {
@@ -10,16 +11,23 @@ public class SurviveTimer : MonoBehaviour
 
     [SerializeField] private SurviveSettings surviveSomeTimeSettings;
 
-    private float timeToSurvive;
+    #endregion
+
+    #region properties
+
+    public float TimeToSurvive { get; private set; }
 
     #endregion
 
     #region Unity methods
+    private void Awake()
+    {
+        TimeToSurvive = surviveSomeTimeSettings.TimeToSurvive;
+    }
 
     private void Start()
     {
         StartCoroutine(Count());
-        timeToSurvive = surviveSomeTimeSettings.TimeToSurvive;
     }
 
     #endregion
@@ -29,8 +37,8 @@ public class SurviveTimer : MonoBehaviour
     private IEnumerator Count()
     {
         yield return new WaitForSecondsRealtime(1);
-        timeToSurvive--;
-        if (timeToSurvive <= 0) onTimerEnd.Invoke();
+        TimeToSurvive--;
+        if (TimeToSurvive <= 0) onTimerEnd.Invoke();
         else StartCoroutine(Count());
     }
 
