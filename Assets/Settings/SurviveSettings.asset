@@ -13,10 +13,10 @@ MonoBehaviour:
   m_Name: SurviveSettings
   m_EditorClassIdentifier: 
   timeToSurvive: 60
-  zombieAgroRadius: 20
+  zombieAgroRadius: 30
   zombieDamage: 10
   zombieDamageRate: 0.5
   initialZombies: 20
   zombieSpawnDistanceFromPlayer: 0
-  zombieSpawnDelay: 100
+  zombieSpawnDelay: 5
   mapWidth: 100
