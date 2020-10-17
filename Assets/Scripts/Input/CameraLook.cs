@@ -7,6 +7,9 @@ public class CameraLook : MonoBehaviour
     #region variables
 
     [SerializeField] private FixedTouchField fixedTouch;
+    [SerializeField] private Transform pivot;
+    [SerializeField] private float fieldVerticalViewMin;
+    [SerializeField] private float fieldVerticalViewMax;
 
     private float mouseSensitivity;
     private float currentYrot;
@@ -29,9 +32,11 @@ public class CameraLook : MonoBehaviour
     private void Update()
     {
         wantedYrot += fixedTouch.TouchDistance.x * mouseSensitivity;
-        wantedXrot -= fixedTouch.TouchDistance.y * mouseSensitivity;
-        wantedXrot = Mathf.Clamp(wantedXrot, -30, 30);
-        transform.rotation = Quaternion.Euler(currentXrot, currentYrot,0 );
+        wantedXrot -= fixedTouch.TouchDistance.y * mouseSensitivity/100;
+        wantedXrot = Mathf.Clamp(wantedXrot, fieldVerticalViewMin, fieldVerticalViewMax);
+        Player.instance.gameObject.transform.rotation = Quaternion.Euler(0, currentYrot, 0);
+        pivot.transform.position = new Vector3(pivot.transform.position.x, -currentXrot, pivot.transform.position.z);
+        transform.LookAt(pivot);
     }
 
     void FixedUpdate()

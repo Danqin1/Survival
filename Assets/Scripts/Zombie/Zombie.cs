@@ -114,12 +114,11 @@ public class Zombie : MonoBehaviour
     {
         if (animator && agent)
         {
-
             if (!hasAgro) animator.SetBool("isWalking", (agent.velocity.magnitude > .5f ? true : false));
             else animator.SetBool("isWalking", false);
             if (hasAgro) animator.SetBool("isRunning", (agent.velocity.magnitude > 1f ? true : false));
             else animator.SetBool("isRunning", false);
-            if (agent.remainingDistance < 1.5f && hasAgro) animator.SetBool("isAttacking", true);
+            if (Vector3.Distance(transform.position, Player.instance.transform.position) < 1) animator.SetBool("isAttacking", true);
             else animator.SetBool("isAttacking", false);
         }
     }

@@ -1,5 +1,7 @@
-﻿using System.Collections;
+﻿
+using System;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class Shooting : MonoBehaviour
 {
@@ -7,31 +9,26 @@ public class Shooting : MonoBehaviour
 
     [SerializeField] private GameObject blood;
     [SerializeField] private GameObject muzzleFlash;
-    [SerializeField] private GameObject weapon;
     [SerializeField] private GameObject CrossHair;
-    [SerializeField] private GameObject flashm;
     [SerializeField] private Transform spawnBulletPosition;
     [SerializeField] private Transform spawnMuzzleFlashPos;
+    [SerializeField] private Camera camera;
+    [SerializeField] private AudioSource audioSource;
+    [SerializeField] private AudioClip fireSound;
+    [SerializeField] private float fireRate = .12f;
 
+    private GameObject flashm;
     private Ray ray;
     private RaycastHit hit;
-    private AudioSource audioSource;
-    public AudioClip fireSound;
-    private float fireRate = .12f;
     private float previousTime = 0;
 
     #endregion
 
     #region Unity methods
 
-    private void Start()
-    {
-        audioSource = Camera.main.GetComponent<AudioSource>();
-    }
-
     void Update()
     {
-        ray = Camera.main.ScreenPointToRay(new Vector3(Screen.width / 2, Screen.height / 2, Camera.main.transform.position.z));
+        ray = camera.ScreenPointToRay(new Vector3(Screen.width / 2, Screen.height / 2, camera.transform.position.z));
 
         if (Physics.Raycast(ray, out hit, 100f))
         {
@@ -62,10 +59,9 @@ public class Shooting : MonoBehaviour
             {
                 CrossHair.GetComponent<Animator>().Play("CrossHairAnimation");
             }
-            flashm = (GameObject)Instantiate(muzzleFlash, spawnMuzzleFlashPos.position, spawnMuzzleFlashPos.rotation);
+            flashm = Instantiate(muzzleFlash, spawnMuzzleFlashPos.position, spawnMuzzleFlashPos.rotation);
             hitted.GetComponent<Zombie>().TakeDamage(Player.instance.Damage);
             Instantiate(blood, hit.point, Quaternion.identity);
-            weapon.GetComponent<Animation>().Play("Ak47FireAnimation");
             if (audioSource) audioSource.PlayOneShot(fireSound);
         }
     }

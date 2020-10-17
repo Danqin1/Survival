@@ -18,5 +18,5 @@ MonoBehaviour:
   zombieDamageRate: 0.5
   initialZombies: 20
   zombieSpawnDistanceFromPlayer: 0
-  zombieSpawnDelay: 1
+  zombieSpawnDelay: 100
   mapWidth: 100
