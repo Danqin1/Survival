@@ -47,7 +47,7 @@ public class ZombieSpawner : MonoBehaviour
             if (Vector3.Distance(hit.position, Player.instance.transform.position) > surviveSettings.ZombieSpawnDistanceFromPlayer)
             {
                 GameObject z = Instantiate(Zombie, hit.position, Quaternion.identity);
-                z.GetComponent<Zombie>().surviveSettings = surviveSettings;
+                //z.GetComponent<Zombie>().surviveSettings = surviveSettings;
                 z.transform.parent = zombieContainer.transform;
             }
         }

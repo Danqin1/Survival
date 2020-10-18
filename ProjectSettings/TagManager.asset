@@ -10,6 +10,7 @@ TagManager:
   - BulletSpawn
   - Zombie
   - LevelPart
+  - Head
   layers:
   - Default
   - TransparentFX

@@ -3,14 +3,15 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 
-[RequireComponent(typeof(NavMeshAgent), typeof(Animator), typeof(Rigidbody))]
+[RequireComponent(typeof(Rigidbody))]
 public class Zombie : MonoBehaviour
 {
     #region variables
 
-    public SurviveSettings surviveSettings;
+    [SerializeField] private SurviveSettings surviveSettings;
 
     [SerializeField] private LayerMask playerLayer;
+    [SerializeField] private float fieldOfViewAngle = 70;
 
     private NavMeshAgent agent;
     private Animator animator;
@@ -45,26 +46,29 @@ public class Zombie : MonoBehaviour
 
         animator = GetComponent<Animator>();
         agent = GetComponent<NavMeshAgent>();
-        agent.stoppingDistance = 1.5f;
+        agent.stoppingDistance = 1f;
         hasAgro = false;
         changeDirectionCR = false;
     }
 
     private void Update()
     {
-        CheckFieldOfView();
-
-        if(!hasAgro && targetPosition != Vector3.zero && agent != null)
+        if(!IsDead)
         {
-            agent.SetDestination(targetPosition);
-        }
+            CheckFieldOfView();
 
-        if(!hasAgro & !changeDirectionCR)
-        {
-            StartCoroutine(changeDirection(agroRadius));
-        }
+            if (!hasAgro && targetPosition != Vector3.zero && agent != null)
+            {
+                agent.SetDestination(targetPosition);
+            }
 
-        SetAnimation(); 
+            if (!hasAgro & !changeDirectionCR)
+            {
+                StartCoroutine(changeDirection(agroRadius));
+            }
+
+            SetAnimation();
+        }
     }
 
     private void OnCollisionStay(Collision collision)
@@ -80,6 +84,11 @@ public class Zombie : MonoBehaviour
         
     }
 
+    private void OnDestroy()
+    {
+        Player.OnTakeAgro -= FollowPlayer;
+    }
+
     #endregion
 
     #region public methods
@@ -91,12 +100,13 @@ public class Zombie : MonoBehaviour
         {
             IsDead = true;
             animator.SetBool("isDead", true);
+            agent.isStopped = true;
+            return;
         }
-        hasAgro = true;
         wasHitted = true;
         if (agent)
         {
-            agent.SetDestination(Player.instance.transform.position);
+            StartFollowingPlayer();
         }
     }
 
@@ -105,6 +115,29 @@ public class Zombie : MonoBehaviour
 
     #region private methods
 
+    private void CheckFieldOfView()
+    {
+        if (Vector3.Distance(transform.position, Player.instance.transform.position) < agroRadius)
+        {
+            Vector3 directionToPlayer = Player.instance.transform.position - transform.position;
+
+            if (Vector3.Angle(transform.forward, directionToPlayer) < fieldOfViewAngle)
+            {
+                RaycastHit hit;
+                if (Physics.Raycast(transform.position, directionToPlayer, out hit, agroRadius, playerLayer))
+                {
+                    if (hit.transform.gameObject.GetComponent<Player>() != null)
+                    {
+                        StartFollowingPlayer();
+                    }
+                    else StopAttacking();
+                }
+            }
+            else StopAttacking();
+        }
+        else StopAttacking();
+    }
+
     private void DoDamage(Player player)
     {
         player.TakeDamage(damage);
@@ -112,65 +145,44 @@ public class Zombie : MonoBehaviour
 
     private void SetAnimation()
     {
-        if (animator && agent)
+        if (animator)
         {
-            if (!hasAgro) animator.SetBool("isWalking", (agent.velocity.magnitude > .5f ? true : false));
-            else animator.SetBool("isWalking", false);
-            if (hasAgro) animator.SetBool("isRunning", (agent.velocity.magnitude > 1f ? true : false));
-            else animator.SetBool("isRunning", false);
-            if (Vector3.Distance(transform.position, Player.instance.transform.position) < 1) animator.SetBool("isAttacking", true);
+            if (!hasAgro) animator.SetFloat("MovingSpeed", .5f);
+
+            if (hasAgro) animator.SetFloat("MovingSpeed", 1 );
+
+            if (Vector3.Distance(transform.position, Player.instance.transform.position) < 1)
+            {
+                animator.SetBool("isAttacking", true);
+            }
             else animator.SetBool("isAttacking", false);
         }
     }
 
-    private void CheckFieldOfView()
-    {
-        if (Vector3.Distance(transform.position, Player.instance.transform.position) < agroRadius)
-        {
-            Vector3 directionToPlayer = Player.instance.transform.position - transform.position;
-
-            if (Vector3.Angle(transform.forward , directionToPlayer) < 70)
-            {
-                RaycastHit hit;
-                if (Physics.Raycast(transform.position, directionToPlayer, out hit, agroRadius, playerLayer))
-                {
-                    if (hit.transform.gameObject.GetComponent<Player>() != null )
-                    {
-                        GetAgro();
-                    }
-                    else DontAttack();
-                }
-            }
-            else DontAttack();
-        }
-        else  DontAttack();
-    }
-
-    private void GetAgro()
+    private void StartFollowingPlayer()
     {
         if (!hasAgro)
         {
-            Player.OnTakeAgro += Agro;
+            Player.OnTakeAgro += FollowPlayer;
             hasAgro = true;
-            agent.speed = 2;
         }   
     }
-    private void DontAttack()
-    {
-        if (hasAgro && !wasHitted)
-        {
-            Player.OnTakeAgro -= Agro;
-            agent.SetDestination(transform.position);
-            hasAgro = false;
-            agent.speed = 1;
-        }    
-    }
 
-    private void Agro()
+    private void FollowPlayer()
     {
         if (Player.instance && agent)
         {
             agent.SetDestination(Player.instance.transform.position);
+        }
+    }
+
+    private void StopAttacking()
+    {
+        if (hasAgro && !wasHitted)
+        {
+            Player.OnTakeAgro -= FollowPlayer;
+            agent.SetDestination(transform.position);
+            hasAgro = false;
         }
     }
 

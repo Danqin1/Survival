@@ -1,28 +1,37 @@
-﻿
-using UnityEngine;
+﻿using UnityEngine;
 
 public class PlayerMovement : MonoBehaviour
 {
     #region variables
 
-    [SerializeField] private DynamicJoystick joystick;
     [SerializeField] private Animator animator;
     [SerializeField] private Shooting shooting;
+
+    private DynamicJoystick joystick;
+    private float horizontal = 0, vertical = 0;
 
     #endregion
 
     #region Unity methods
 
+    private void Start()
+    {
+        joystick = FindObjectOfType<DynamicJoystick>();
+    }
+
     private void FixedUpdate()
     {
-        float horizontal = 0, vertical = 0;
-        if (joystick.MoveThreshold > 0)
+        if (joystick != null)
         {
-            horizontal = joystick.Horizontal; //(joystick.Horizontal < -0.1) ? -1 : (joystick.Horizontal > 0.1f) ? 1 : joystick.Horizontal;
-            vertical = joystick.Vertical;//(joystick.Vertical < -0.1) ? -1 : (joystick.Vertical > 0.1f) ? 1 : joystick.Vertical;
-            animator.SetFloat("Y", vertical);
-            animator.SetFloat("X", horizontal);
+            if (joystick.MoveThreshold > 0)
+            {
+                horizontal = joystick.Horizontal;
+                vertical = joystick.Vertical;
+                animator.SetFloat("Y", vertical);
+                animator.SetFloat("X", horizontal);
+            }
         }
+        else Debug.LogError("No Joystick");
     }
 
     #endregion

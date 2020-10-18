@@ -14,6 +14,7 @@ public class Player : MonoBehaviour
     public static Player instance;
 
     public float Damage = 20;
+    public float HeadDamage = 100;
 
     private float Health = 100;
 

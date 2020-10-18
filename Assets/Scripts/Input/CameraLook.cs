@@ -1,16 +1,16 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class CameraLook : MonoBehaviour
 {
     #region variables
 
-    [SerializeField] private FixedTouchField fixedTouch;
     [SerializeField] private Transform pivot;
+    [SerializeField] private Camera camera;
+
     [SerializeField] private float fieldVerticalViewMin;
     [SerializeField] private float fieldVerticalViewMax;
 
+    private FixedTouchField fixedTouch;
     private float mouseSensitivity;
     private float currentYrot;
     private float currentXrot;
@@ -27,16 +27,21 @@ public class CameraLook : MonoBehaviour
     private void Start()
     {
         mouseSensitivity = .2f;
+        fixedTouch = FindObjectOfType<FixedTouchField>();
     }
 
     private void Update()
     {
-        wantedYrot += fixedTouch.TouchDistance.x * mouseSensitivity;
-        wantedXrot -= fixedTouch.TouchDistance.y * mouseSensitivity/100;
-        wantedXrot = Mathf.Clamp(wantedXrot, fieldVerticalViewMin, fieldVerticalViewMax);
-        Player.instance.gameObject.transform.rotation = Quaternion.Euler(0, currentYrot, 0);
-        pivot.transform.position = new Vector3(pivot.transform.position.x, -currentXrot, pivot.transform.position.z);
-        transform.LookAt(pivot);
+        if (fixedTouch != null)
+        {
+            wantedYrot += fixedTouch.TouchDistance.x * mouseSensitivity;
+            wantedXrot -= fixedTouch.TouchDistance.y * mouseSensitivity / 100;
+            wantedXrot = Mathf.Clamp(wantedXrot, fieldVerticalViewMin, fieldVerticalViewMax);
+            Player.instance.gameObject.transform.rotation = Quaternion.Euler(0, currentYrot, 0);
+            pivot.transform.position = new Vector3(pivot.transform.position.x, -currentXrot, pivot.transform.position.z);
+            camera.transform.LookAt(pivot);
+        }
+        else Debug.LogError("Cant find touch field");
     }
 
     void FixedUpdate()
