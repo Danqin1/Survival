@@ -1182,11 +1182,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2b136be9088d8d84599527b59a3dd42f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  surviveSettings: {fileID: 11400000, guid: 8d443e2bde08c4943a505f122442537b, type: 2}
+  animator: {fileID: 4355156556980824816}
+  zombieSettings: {fileID: 11400000, guid: d124bbbf1093a1540ad71508000e6cd2, type: 2}
   playerLayer:
     serializedVersion: 2
     m_Bits: 512
-  fieldOfViewAngle: 70
+  agent: {fileID: 7915045365328659237}
 --- !u!195 &7915045365328659237
 NavMeshAgent:
   m_ObjectHideFlags: 0

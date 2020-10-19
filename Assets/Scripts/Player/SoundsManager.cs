@@ -12,6 +12,7 @@ public class SoundsManager : MonoBehaviour
 
     public void FireSound()
     {
+        audioSource.volume = 1f;
         audioSource?.PlayOneShot(fire);
     }
 

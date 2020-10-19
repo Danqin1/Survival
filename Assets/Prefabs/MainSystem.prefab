@@ -46,8 +46,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8d8ea0b5bbb08954a97a0729a33d1240, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Zombie: {fileID: 7549156387228805200, guid: 0efb2c320a5af914ab4fa1ee558f6eaf, type: 3}
-  surviveSettings: {fileID: 11400000, guid: 8d443e2bde08c4943a505f122442537b, type: 2}
+  Zombie: {fileID: 4355156556980824817, guid: b3db16ee1af99c243bccd22b3d57f3f1, type: 3}
+  surviveSettings: {fileID: 11400000, guid: d124bbbf1093a1540ad71508000e6cd2, type: 2}
   zombieContainer: {fileID: 0}
 --- !u!114 &1080827410927178406
 MonoBehaviour:
@@ -64,7 +64,7 @@ MonoBehaviour:
   onTimerEnd:
     m_PersistentCalls:
       m_Calls: []
-  surviveSomeTimeSettings: {fileID: 11400000, guid: 8d443e2bde08c4943a505f122442537b,
+  surviveSomeTimeSettings: {fileID: 11400000, guid: d124bbbf1093a1540ad71508000e6cd2,
     type: 2}
 --- !u!114 &1080827410927178407
 MonoBehaviour:

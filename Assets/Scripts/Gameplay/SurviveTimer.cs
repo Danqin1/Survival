@@ -9,7 +9,7 @@ public class SurviveTimer : MonoBehaviour
 
     public UnityEvent onTimerEnd;
 
-    [SerializeField] private SurviveSettings surviveSomeTimeSettings;
+    [SerializeField] private ZombieSettings surviveSomeTimeSettings;
 
     #endregion
 

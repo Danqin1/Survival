@@ -7,7 +7,7 @@ public class ZombieSpawner : MonoBehaviour
     #region variables
 
     [SerializeField] private GameObject Zombie;
-    [SerializeField] private SurviveSettings surviveSettings;
+    [SerializeField] private ZombieSettings surviveSettings;
     [SerializeField] private GameObject zombieContainer;
 
     #endregion

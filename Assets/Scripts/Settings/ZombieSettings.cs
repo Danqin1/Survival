@@ -1,8 +1,8 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-[CreateAssetMenu(fileName = "SurviveTimeSettings", menuName = "Survival/SurviveTime Settings")]
-public class SurviveSettings : ScriptableObject
+[CreateAssetMenu(fileName = "ZokmbieSettings", menuName = "Survival/Zombie Settings")]
+public class ZombieSettings : ScriptableObject
 {
     [SerializeField] private float timeToSurvive;
     [SerializeField] private float zombieAgroRadius;
@@ -12,6 +12,9 @@ public class SurviveSettings : ScriptableObject
     [SerializeField] private int zombieSpawnDistanceFromPlayer;
     [SerializeField] private float zombieSpawnDelay;
     [SerializeField] private int mapWidth = 100;
+    [SerializeField] private int fieldsOfViewAngle = 60;
+    [SerializeField] private float stopAttackingDistance = 1;
+    [SerializeField] private float initialHealth = 100;
 
     public float TimeToSurvive => timeToSurvive;
     public float ZombieAgroRadius => zombieAgroRadius;
@@ -21,4 +24,7 @@ public class SurviveSettings : ScriptableObject
     public int ZombieSpawnDistanceFromPlayer => zombieSpawnDistanceFromPlayer;
     public float ZombieSpawnDelay => zombieSpawnDelay;
     public int MapWidth => mapWidth;
+    public float FieldsOfViewAngle => fieldsOfViewAngle;
+    public float StopAttackingDistance => stopAttackingDistance;
+    public float InitialHealth => initialHealth;
 }
