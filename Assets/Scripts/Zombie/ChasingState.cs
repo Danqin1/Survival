@@ -8,17 +8,15 @@ public class ChasingState : ZombieBehaviourState
         zombieStateMashine.animator.SetFloat("MovingSpeed", 1);
     }
 
-    #region variables
-
-    private Vector3 targetPosition = Vector3.zero;
-
-    #endregion
-
     #region public methods
 
     public override void Tick()
     {
         agent?.SetDestination(Player.instance.transform.position);
+        if (Vector3.Distance(zombieStateMashine.transform.position, Player.instance.transform.position) < zombieStateMashine.zombieSettings.ZombieStartAttackingDistance)
+        {
+            Attacking();
+        }
     }
 
     public override void Attacking()

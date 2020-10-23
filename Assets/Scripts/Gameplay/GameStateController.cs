@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class GameStateController : MonoBehaviour
 {
@@ -8,6 +9,7 @@ public class GameStateController : MonoBehaviour
 
     [SerializeField] private SurviveTimer surviveTimer;
     [SerializeField] private GameObject pauseMenu;
+    [SerializeField] private GameObject gameOverScreen;
     [SerializeField] private PopupsUI popupsUI;
 
     #endregion
@@ -16,8 +18,12 @@ public class GameStateController : MonoBehaviour
 
     private void Start()
     {
+        gameOverScreen.SetActive(false);
+        pauseMenu.SetActive(false);
+
         surviveTimer.onTimerEnd.AddListener(OnTimerEnd);
         Player.instance.PlayerDied.AddListener(OnPlayerDied);
+
         popupsUI.ShowMessage($"Survive {surviveTimer.TimeToSurvive} seconds!");
     }
 
@@ -48,6 +54,14 @@ public class GameStateController : MonoBehaviour
     private void OnPlayerDied()
     {
         popupsUI.ShowMessage($"You DIED!");
+        gameOverScreen.SetActive(true);
+        StartCoroutine(GameOver());
+    }
+
+    private IEnumerator GameOver()
+    {
+        yield return new WaitForSeconds(2);
+        SceneManager.LoadScene(0);
     }
 
     #endregion

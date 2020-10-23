@@ -5,7 +5,6 @@ public class PlayerMovement : MonoBehaviour
     #region variables
 
     [SerializeField] private Animator animator;
-    [SerializeField] private Shooting shooting;
 
     private DynamicJoystick joystick;
     private float horizontal = 0, vertical = 0;
@@ -27,9 +26,33 @@ public class PlayerMovement : MonoBehaviour
             {
                 horizontal = joystick.Horizontal;
                 vertical = joystick.Vertical;
-                animator.SetFloat("Y", vertical);
-                animator.SetFloat("X", horizontal);
+                if(horizontal > .5f && vertical > .5f)
+                {
+                    animator.SetFloat("Y", 1);
+                    animator.SetFloat("X", 1);
+                }
+                else if (horizontal < -.5f && vertical < -.5f)
+                {
+                    animator.SetFloat("Y", -1);
+                    animator.SetFloat("X", -1);
+                }
+                else if (horizontal < -.5f && vertical > .5f)
+                {
+                    animator.SetFloat("Y", 1);
+                    animator.SetFloat("X", -1);
+                }
+                else if (horizontal > .5f && vertical < -.5f)
+                {
+                    animator.SetFloat("Y", -1);
+                    animator.SetFloat("X", 1);
+                }
+                else
+                {
+                    animator.SetFloat("Y", vertical);
+                    animator.SetFloat("X", horizontal);
+                }
             }
+            Debug.Log(horizontal + " " + vertical);
         }
         else Debug.LogError("No Joystick");
     }

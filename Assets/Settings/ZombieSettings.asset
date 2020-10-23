@@ -21,5 +21,6 @@ MonoBehaviour:
   zombieSpawnDelay: 5
   mapWidth: 100
   fieldsOfViewAngle: 60
-  stopAttackingDistance: 1
+  stopAttackingDistance: 1.5
   initialHealth: 100
+  zombieStartAttackingDistance: 1.5

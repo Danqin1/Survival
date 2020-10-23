@@ -16,7 +16,7 @@ public class Player : MonoBehaviour
     public float Damage = 20;
     public float HeadDamage = 100;
 
-    private float Health = 100;
+    public float Health { get; private set; } = 100;
 
     #endregion
 

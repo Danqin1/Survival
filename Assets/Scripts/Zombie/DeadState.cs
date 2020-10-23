@@ -1,15 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using UnityEngine.AI;
+﻿using UnityEngine.AI;
 
 public class DeadState : ZombieBehaviourState
 {
-    public DeadState(ZombieStateMashine stateMashine, NavMeshAgent agent) : base(stateMashine, agent) 
+    public DeadState(ZombieStateMashine stateMashine, NavMeshAgent agent, SoundsManager sounds) : base(stateMashine, agent) 
     {
         zombieStateMashine.animator.SetBool("isDead", true);
+        if (sounds != null) sounds.OnZombieKilled();
     }
 
     public override void Tick()

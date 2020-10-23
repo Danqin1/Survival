@@ -13,8 +13,9 @@ public class ZombieSettings : ScriptableObject
     [SerializeField] private float zombieSpawnDelay;
     [SerializeField] private int mapWidth = 100;
     [SerializeField] private int fieldsOfViewAngle = 60;
-    [SerializeField] private float stopAttackingDistance = 1;
+    [SerializeField] private float stopAttackingDistance = 1.5f;
     [SerializeField] private float initialHealth = 100;
+    [SerializeField] private float zombieStartAttackingDistance = 1.5f;
 
     public float TimeToSurvive => timeToSurvive;
     public float ZombieAgroRadius => zombieAgroRadius;
@@ -27,4 +28,5 @@ public class ZombieSettings : ScriptableObject
     public float FieldsOfViewAngle => fieldsOfViewAngle;
     public float StopAttackingDistance => stopAttackingDistance;
     public float InitialHealth => initialHealth;
+    public float ZombieStartAttackingDistance => zombieStartAttackingDistance;
 }

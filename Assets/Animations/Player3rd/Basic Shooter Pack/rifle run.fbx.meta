@@ -61,39 +61,7 @@ ModelImporter:
       mirror: 0
       bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
       curves: []
-      events:
-      - time: 0.16938774
-        functionName: StepsSound
-        data: 
-        objectReferenceParameter: {fileID: 2820721788927130772, guid: 107d2f9924cd43a4a99a2766062a1548,
-          type: 3}
-        floatParameter: 0
-        intParameter: 0
-        messageOptions: 0
-      - time: 0.43009382
-        functionName: StepsSound
-        data: 
-        objectReferenceParameter: {fileID: 2820721788927130772, guid: 107d2f9924cd43a4a99a2766062a1548,
-          type: 3}
-        floatParameter: 0
-        intParameter: 0
-        messageOptions: 0
-      - time: 0.6727649
-        functionName: StepsSound
-        data: 
-        objectReferenceParameter: {fileID: 2820721788927130772, guid: 107d2f9924cd43a4a99a2766062a1548,
-          type: 3}
-        floatParameter: 0
-        intParameter: 0
-        messageOptions: 0
-      - time: 0.9115404
-        functionName: StepsSound
-        data: 
-        objectReferenceParameter: {fileID: 2820721788927130772, guid: 107d2f9924cd43a4a99a2766062a1548,
-          type: 3}
-        floatParameter: 0
-        intParameter: 0
-        messageOptions: 0
+      events: []
       transformMask: []
       maskType: 3
       maskSource: {instanceID: 0}

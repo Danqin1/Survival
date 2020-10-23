@@ -45,10 +45,15 @@ public class Zombie : MonoBehaviour
         if (Health <= 0)
         {
             IsDead = true;
-            zombieStateMashine.SetState(new DeadState(zombieStateMashine, agent));
+            zombieStateMashine.SetState(new DeadState(zombieStateMashine, agent, FindObjectOfType<SoundsManager>()));
             return;
         }
-        zombieStateMashine.SetState(new ChasingState(zombieStateMashine, agent));
+        if(zombieStateMashine.currentState is WalkingState state) zombieStateMashine.SetState(new ChasingState(zombieStateMashine, agent));
+    }
+
+    public void DoDamage()
+    {
+        Player.instance.TakeDamage(zombieSettings.ZombieDamage);
     }
 
     #endregion

@@ -7,6 +7,7 @@ public class SoundsManager : MonoBehaviour
 
     [SerializeField] private AudioClip fire;
     [SerializeField] private AudioClip steps;
+    [SerializeField] private AudioClip[] onZombieDied;
 
     private bool stepsPlaying;
 
@@ -23,6 +24,12 @@ public class SoundsManager : MonoBehaviour
             StartCoroutine(Steps());
             stepsPlaying = true;
         }
+    }
+
+    public void OnZombieKilled()
+    {
+        audioSource.volume = 1f;
+        audioSource.PlayOneShot(onZombieDied[Random.Range(0, onZombieDied.Length)]);
     }
 
     private IEnumerator Steps()
