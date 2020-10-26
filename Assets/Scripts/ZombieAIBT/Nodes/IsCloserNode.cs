@@ -3,20 +3,20 @@ using UnityEngine;
 
 class IsCloserNode : Node
 {
-    private Transform target;
     private Transform origin;
+    private Transform target;
     private float range;
 
-    public IsCloserNode(Transform target, Transform origin, float range)
+    public IsCloserNode(Transform origin, Transform target, float range)
     {
-        this.target = target;
         this.origin = origin;
+        this.target = target;
         this.range = range;
     }
 
     public override NodeState Evaluate()
     {
-        state = Vector3.Distance(target.position, origin.position) < range ? NodeState.SUCCES : NodeState.FAILURE;
+        state = Vector3.Distance(origin.position, target.position) < range ? NodeState.SUCCES : NodeState.FAILURE;
         return state;
     }
 }

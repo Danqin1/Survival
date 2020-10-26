@@ -6,7 +6,6 @@ class ChaseNode : Node
     private Transform target;
     private NavMeshAgent agent;
     private Animator animator;
-    private ZombieAI zombieAI;
 
     public ChaseNode(Transform target, NavMeshAgent agent, Animator animator)
     {
@@ -17,17 +16,17 @@ class ChaseNode : Node
 
     public override NodeState Evaluate()
     {
-        if(agent.isOnNavMesh)
+        if (agent.isOnNavMesh)
         {
-            if(zombieAI.HasAgro)
-            {
-                agent.SetDestination(target.position);
-                animator.SetFloat(ZombieAnimatorVariables.MovingName, ZombieAnimatorVariables.Run);
-                state = NodeState.SUCCES;
-            }
+            agent.SetDestination(target.position);
+            animator.SetBool(ZombieAnimatorVariables.AttackingBool, false);
+            animator.SetFloat(ZombieAnimatorVariables.MovingName, ZombieAnimatorVariables.Run);
+            state = NodeState.SUCCES;
         }
-        state = NodeState.FAILURE;
-        
+        else state = NodeState.FAILURE;
+
+        agent.GetComponent<ZombieAI>().SetIndicatorColor(Color.yellow);
+
         return state;
     }
 }

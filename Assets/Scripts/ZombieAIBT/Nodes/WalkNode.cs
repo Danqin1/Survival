@@ -19,7 +19,9 @@ class WalkNode : Node
 
     public override NodeState Evaluate()
     {
-        if(agent.isOnNavMesh)
+        animator.gameObject.GetComponent<ZombieAI>().SetIndicatorColor(Color.green);
+
+        if (agent.isOnNavMesh)
         {
             if(Time.time - previousChangeDestinationTime < changeDestinationDelay)
             {

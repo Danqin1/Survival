@@ -3,19 +3,15 @@
 class AttackNode : Node
 {
     private Animator animator;
+    private int randomNumber;
+    private float attack;
 
     public AttackNode(Animator animator)
     {
         this.animator = animator;
-    }
-
-    public override NodeState Evaluate()
-    {
-        animator.SetBool(ZombieAnimatorVariables.AttackingBool, true);
-
-        int attackNumber = Random.Range(0, 3);
-        float attack = 0;
-        switch (attackNumber)
+        randomNumber = Random.Range(0, 3);
+        attack = 0;
+        switch (randomNumber)
         {
             case 0:
                 attack = 0;
@@ -29,8 +25,14 @@ class AttackNode : Node
             default:
                 break;
         }
+    }
 
+    public override NodeState Evaluate()
+    {
+        animator.SetBool(ZombieAnimatorVariables.AttackingBool, true);
         animator.SetFloat(ZombieAnimatorVariables.AttackNumber, attack);
+
+        animator.gameObject.GetComponent<ZombieAI>().SetIndicatorColor(Color.red);
 
         state = NodeState.SUCCES;
         return state;

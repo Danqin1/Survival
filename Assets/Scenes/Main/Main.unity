@@ -225,6 +225,12 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1542214852 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 8488907277537046974, guid: b9e77c6ab6706ce44917e52a317b6035,
+    type: 3}
+  m_PrefabInstance: {fileID: 1080827410288527419}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &1748378802
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -292,14 +298,13 @@ PrefabInstance:
       propertyPath: m_Name
       value: Player3rd
       objectReference: {fileID: 0}
+    - target: {fileID: 2820721788927130777, guid: 107d2f9924cd43a4a99a2766062a1548,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 107d2f9924cd43a4a99a2766062a1548, type: 3}
---- !u!1 &1777842523 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 3664517567478548976, guid: 107d2f9924cd43a4a99a2766062a1548,
-    type: 3}
-  m_PrefabInstance: {fileID: 1748378802}
-  m_PrefabAsset: {fileID: 0}
 --- !u!850595691 &1816263303
 LightingSettings:
   m_ObjectHideFlags: 0
@@ -402,7 +407,7 @@ PrefabInstance:
         type: 3}
       propertyPath: CrossHair
       value: 
-      objectReference: {fileID: 1777842523}
+      objectReference: {fileID: 1542214852}
     - target: {fileID: 195233014327515401, guid: b9e77c6ab6706ce44917e52a317b6035,
         type: 3}
       propertyPath: spawnBulletPosition

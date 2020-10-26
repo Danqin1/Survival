@@ -52,7 +52,6 @@ public class PlayerMovement : MonoBehaviour
                     animator.SetFloat("X", horizontal);
                 }
             }
-            Debug.Log(horizontal + " " + vertical);
         }
         else Debug.LogError("No Joystick");
     }

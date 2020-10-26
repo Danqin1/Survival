@@ -20,7 +20,7 @@ public class IsPlayerVisibleNode : Node
     {
         if(Vector3.Distance(origin.position, Player.instance.transform.position) < agroRadius)
         {
-            Vector3 directionToPlayer = Player.instance.transform.position = origin.transform.position;
+            Vector3 directionToPlayer = Player.instance.transform.position - origin.transform.position;
 
             if(Vector3.Angle(origin.transform.forward, directionToPlayer) < fieldOfViewAngle)
             {

@@ -7,6 +7,8 @@ public class ZombieAI : MonoBehaviour
 {
     #region variables
 
+    public GameObject indicator;
+
     [SerializeField] private ZombieSettings zombieSettings;
     [SerializeField] private LayerMask playerLayer;
     
@@ -44,33 +46,7 @@ public class ZombieAI : MonoBehaviour
 
     #endregion
 
-    #region private methods
-
-    private void ConstructBehaviourTree()
-    {
-        IsDeadNode isDeadNode = new IsDeadNode(this, animator);
-        AttackNode attackNode = new AttackNode(animator);
-        HasAgroNode hasAgroNode = new HasAgroNode(this);
-        IsCloserNode isCloseToAttack = new IsCloserNode(Player.instance.transform, transform, 1.5f);
-        ChaseNode chaseNode = new ChaseNode(Player.instance.transform, agent, animator);
-        WalkNode walkNode = new WalkNode(agent, animator, changeDestinationDelay, walkRadius);
-        WasHittedNode wasHittedNode = new WasHittedNode(this);
-        IsPlayerVisibleNode isPlayerVisibleNode = new IsPlayerVisibleNode(transform, zombieSettings.ZombieAgroRadius, zombieSettings.FieldsOfViewAngle, playerLayer);
-
-        Sequence attackSequence = new Sequence(new List<Node>() {attackNode });
-
-        Sequence isAttackPossibleSequence = new Sequence(new List<Node>() { isCloseToAttack, attackSequence });
-
-        Sequence agroSequence = new Sequence(new List<Node>() { hasAgroNode, chaseNode });
-
-        Selector canAttackSelector = new Selector(new List<Node>() { isAttackPossibleSequence, agroSequence });
-
-        Sequence playerVisibleSequence = new Sequence(new List<Node>() { isPlayerVisibleNode, canAttackSelector });
-
-        Sequence hittedSequence = new Sequence(new List<Node>() { canAttackSelector });
-
-        topNode = new Selector(new List<Node>() {isDeadNode, hittedSequence, playerVisibleSequence, walkNode});
-    }
+    #region public methods
 
     public void TakeDamage(float dmg)
     {
@@ -87,6 +63,32 @@ public class ZombieAI : MonoBehaviour
     public void DoDamage()
     {
         Player.instance.TakeDamage(zombieSettings.ZombieDamage);
+    }
+
+    public void SetIndicatorColor(Color color)
+    {
+        indicator.GetComponent<MeshRenderer>().material.color = color;
+    }
+
+    #endregion
+
+    #region private methods
+
+    private void ConstructBehaviourTree()
+    {
+        DieNode dieNode = new DieNode(this, animator);
+        AttackNode attackNode = new AttackNode(animator);
+        IsCloserNode isCloseToAttack = new IsCloserNode(this.transform, Player.instance.transform, agent.stoppingDistance);
+        ChaseNode chaseNode = new ChaseNode(Player.instance.transform, agent, animator);
+        WalkNode walkNode = new WalkNode(agent, animator, changeDestinationDelay, walkRadius);
+        WasHittedNode wasHittedNode = new WasHittedNode(this);
+        IsPlayerVisibleNode isPlayerVisibleNode = new IsPlayerVisibleNode(transform, zombieSettings.ZombieAgroRadius, zombieSettings.FieldsOfViewAngle, playerLayer);
+
+        Sequence attackSequence = new Sequence(new List<Node>() { isCloseToAttack, attackNode });
+        Sequence chaseSequence = new Sequence(new List<Node>() { isPlayerVisibleNode, chaseNode });
+        Sequence hittedSequence = new Sequence(new List<Node>() { wasHittedNode, chaseNode });
+
+        topNode = new Selector(new List<Node>() { dieNode, attackSequence, hittedSequence, chaseSequence, walkNode});
     }
 
     private void Die()

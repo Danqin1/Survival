@@ -31,7 +31,7 @@ public class Shooting : MonoBehaviour
 
         if (Physics.Raycast(ray, out hit, 100f))
         {
-            if (hit.transform.gameObject.GetComponent<Zombie>() != null)
+            if (hit.transform.gameObject.GetComponent<ZombieAI>() != null)
             {
                 if (Time.realtimeSinceStartup - previousTime > fireRate)
                 {
@@ -52,14 +52,14 @@ public class Shooting : MonoBehaviour
 
     private void Fire(GameObject hitted, string tag)
     {
-        if (!hitted.GetComponent<Zombie>().IsDead)
+        if (!hitted.GetComponent<ZombieAI>().IsDead)
         {
             if (CrossHair.GetComponent<Animator>())
             {
                 CrossHair.GetComponent<Animator>().Play("CrossHairAnimation");
             }
             muzzleFlashObject = Instantiate(muzzleFlash, spawnMuzzleFlashPos.position, spawnMuzzleFlashPos.rotation);
-            hitted.GetComponent<Zombie>().TakeDamage((tag == ZOMBIE_TAG) ? Player.instance.Damage : Player.instance.HeadDamage);
+            hitted.GetComponent<ZombieAI>().TakeDamage((tag == ZOMBIE_TAG) ? Player.instance.Damage : Player.instance.HeadDamage);
             Instantiate(blood, hit.point, Quaternion.identity);
             soundsManager.FireSound();
 
